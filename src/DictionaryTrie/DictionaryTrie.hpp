@@ -36,7 +36,8 @@ class DictionaryTrie {
 	}
     };  
     TSTNode* root;
-    
+ 
+    vector<pair<string,unsigned int>> predictHelper(vector<pair<string, unsigned int>> wordsSoFar, TSTNode* curr, string prefix);   
 
   public:
 
@@ -63,6 +64,12 @@ class DictionaryTrie {
     ~DictionaryTrie();
 
 };
+struct CompareFrequency{
+	bool operator()(pair<string, unsigned int> p1, pair<string, unsigned int> p2){
+		return p1.second > p2.second;
+	}
+};
+
 
 
 #endif  // DICTIONARY_TRIE_HPP

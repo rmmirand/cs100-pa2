@@ -59,3 +59,18 @@ TEST(DictTrieTests, FINDLIST_TEST){
 	temp = dictii.insert("apple", 4);
 	ASSERT_EQ(dictii.find("apple"), true);
 }
+TEST(DictTrieTests, PREDICT_EMPTY){
+	DictionaryTrie dict;
+	vector<string> test;
+	ASSERT_EQ(dict.predictCompletions("apple", 5), test);
+}
+TEST(DictTrieTests, PREDICTLIST_TEST){
+	DictionaryTrie dict;
+	bool temp;
+	temp = dict.insert("app", 4);
+	temp = dict.insert("apps", 5);
+	vector<string> test;
+	test.push_back("apps");
+	test.push_back("app");
+	ASSERT_EQ(dict.predictCompletions("ap", 3), test);
+}

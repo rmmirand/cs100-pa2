@@ -5,6 +5,7 @@
  */
 #include "DictionaryTrie.hpp"
 #include <iostream>
+#include <algorithm>
 
 /* TODO */
 DictionaryTrie::DictionaryTrie() {
@@ -16,7 +17,6 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 			return false;
 	}
 	unsigned int i =0;
-	char letter = word[i];
 	if(!root){
 		root = new TSTNode(word[i]);
 		i++;
@@ -128,10 +128,79 @@ bool DictionaryTrie::find(string word) const {
 }
 /* TODO */
 vector<string> DictionaryTrie::predictCompletions(string prefix,
-                                                  unsigned int numCompletions) {
-    return {};
-}
+    		unsigned int numCompletions) {
+	vector<string> predictions;
+	vector<pair<string,unsigned int>> allPredicts;
 
+	if(!root){
+		return {};
+	}
+	
+	TSTNode* curr = root;
+	unsigned int i = 0;
+	char letter = prefix[i];
+	while(i < prefix.size()){
+		if(letter < curr->letter){
+			if(curr->left){
+				curr = curr->left;
+			}else{
+				return {};
+			}
+		}else if(curr->letter < letter){
+			if(curr->right){
+				curr = curr->right;
+			}else{
+				return {};
+			}
+		}else{
+			if((i == (prefix.size()-1)) && curr->wordNode){
+				pair<string,unsigned int> predict = make_pair(prefix, curr->frequency);
+				allPredicts.push_back(predict);
+				i++;
+				if(curr->middle){
+					curr = curr->middle;
+					i++;
+				}else{
+					predictions.push_back(prefix);
+					return predictions; //change
+				}
+			}else{
+				if(curr->middle){
+					curr = curr->middle;
+					i++;
+					letter = prefix[i];
+				}else{
+					return {};
+				}
+			}
+		}
+	}
+	allPredicts = predictHelper(allPredicts, curr, prefix+curr->letter);
+	CompareFrequency compareFreq;
+	sort(allPredicts.begin(), allPredicts.end(), compareFreq);
+	if(allPredicts.size() < numCompletions){
+		numCompletions = allPredicts.size();
+	}	
+	for(unsigned int i = 0; i < numCompletions ; i++){
+		predictions.push_back(allPredicts[i].first);
+	}
+	return predictions;
+}
+vector<pair<string,unsigned int>> DictionaryTrie::predictHelper(vector<pair<string, unsigned int>> wordsSoFar, TSTNode* curr, string prefix){
+	if(curr->wordNode){
+		wordsSoFar.push_back(make_pair(prefix, curr->frequency));
+	}
+	if(curr->left){
+		wordsSoFar = predictHelper(wordsSoFar, curr->left, prefix+(curr->left->letter));
+	}
+	if(curr->middle){
+		wordsSoFar = predictHelper(wordsSoFar, curr->middle, prefix+(curr->middle->letter));
+	}
+	if(curr->right){
+		wordsSoFar = predictHelper(wordsSoFar, curr->right, prefix+(curr->right->letter));
+	}
+	return wordsSoFar;
+}
 /* TODO */
 std::vector<string> DictionaryTrie::predictUnderscores(
     string pattern, unsigned int numCompletions) {
