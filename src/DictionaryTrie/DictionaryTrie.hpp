@@ -36,9 +36,12 @@ class DictionaryTrie {
 	}
     };  
     TSTNode* root;
-
+    
 
   public:
+
+    void deleteAll(TSTNode* node);
+
     /* TODO: add function header */
     DictionaryTrie();
 

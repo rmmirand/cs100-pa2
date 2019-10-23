@@ -253,4 +253,15 @@ std::vector<string> DictionaryTrie::predictUnderscores(
 }
 
 /* TODO */
-DictionaryTrie::~DictionaryTrie() {/**deleteAll(root)*/}
+DictionaryTrie::~DictionaryTrie() {
+	deleteAll(root);
+}
+void DictionaryTrie::deleteAll(TSTNode* node){
+	if(!node){
+		return;
+	}
+	deleteAll(node->left);
+	deleteAll(node->middle);
+	deleteAll(node->right);
+	delete node;
+}
