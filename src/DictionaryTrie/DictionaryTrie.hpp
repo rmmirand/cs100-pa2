@@ -19,6 +19,23 @@ using namespace std;
 class DictionaryTrie {
   private:
     // TODO: add private members and helper methods here
+    class TSTNode {
+      public:
+        TSTNode* left;
+        TSTNode* right;
+        TSTNode* middle;
+	char const letter;
+	unsigned int frequency;
+	bool wordNode;
+
+        TSTNode(const char &letter) : letter(letter){
+		frequency = 0;
+		wordNode = false;
+	}
+    };  
+    TSTNode* root;
+
+
   public:
     /* TODO: add function header */
     DictionaryTrie();
@@ -39,6 +56,13 @@ class DictionaryTrie {
 
     /* TODO: add function header */
     ~DictionaryTrie();
+
+    //Helper functions
+    TSTNode* insertRecurser(TSTNode* node, char letter) const;
+    bool insertHelper(TSTNode* node, string word, unsigned int freq, unsigned int loc) const;
+    bool findHelper(TSTNode* node, char lettre) const;
+ 
 };
+
 
 #endif  // DICTIONARY_TRIE_HPP

@@ -1,4 +1,5 @@
 # TODO: Define dictionary_trie using function library()
+dictionary_trie = library('dictionary_trie', sources: ['DictionaryTrie.cpp'])
 
 inc = include_directories('.')
 

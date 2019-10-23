@@ -25,3 +25,19 @@ TEST(DictTrieTests, EMPTY_TEST) {
 }
 
 /* TODO */
+TEST(DictTrieTests, FALSEFIND_TEST){ 
+    DictionaryTrie dict;
+    bool temp = dict.insert("apple", 6);
+    ASSERT_EQ(dict.find("banana"), false);
+}
+TEST(DictTrieTests, EMPTYSTRING_TEST) {
+    DictionaryTrie dict;
+    string empty = "";
+    ASSERT_EQ(dict.insert(empty, 1), false);
+}
+TEST(DictTrieTests, INSERTROOT_TEST) {
+    DictionaryTrie dict;
+    bool temp;
+    temp = dict.insert("banana", 5);
+    ASSERT_EQ(dict.find("banana"), true);
+}
