@@ -62,11 +62,6 @@ class DictionaryTrie {
     /* TODO: add function header */
     ~DictionaryTrie();
 
-    //Helper functions
-    TSTNode* insertRecurser(TSTNode* node, char letter) const;
-    bool insertHelper(TSTNode* node, string word, unsigned int freq, unsigned int loc) const;
-    bool findHelper(TSTNode* node, char lettre) const;
- 
 };
 
 
