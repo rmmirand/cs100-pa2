@@ -64,7 +64,7 @@ TEST(DictTrieTests, PREDICT_EMPTY){
 	vector<string> test;
 	ASSERT_EQ(dict.predictCompletions("apple", 5), test);
 }
-TEST(DictTrieTests, PREDICTLIST_TEST){
+TEST(DictTrieTests, PREDICTSORT_TEST){
 	DictionaryTrie dict;
 	bool temp;
 	temp = dict.insert("app", 4);
@@ -72,5 +72,45 @@ TEST(DictTrieTests, PREDICTLIST_TEST){
 	vector<string> test;
 	test.push_back("apps");
 	test.push_back("app");
+	ASSERT_EQ(dict.predictCompletions("ap", 3), test);
+}TEST(DictTrieTests, PREDICTLIST_TEST){
+	DictionaryTrie dict;
+	bool temp;
+	temp = dict.insert("app",3);
+	temp = dict.insert("apc",7);
+	temp = dict.insert("apb",8);
+	temp = dict.insert("apa",9);
+	temp = dict.insert("apca", 1);
+	temp = dict.insert("az",2);
+	temp = dict.insert("ay",10);
+	temp = dict.insert("azi", 1);
+	vector<string> test = {"apa", "apb", "apc", "app", "apca"};
+	ASSERT_EQ(dict.predictCompletions("ap", 7), test);
+}
+TEST(DictTrieTests, PREDICSAME_TEST){
+	DictionaryTrie dict;
+	bool temp;
+	temp = dict.insert("apple", 6);
+	temp = dict.insert("apples", 7);
+	temp = dict.insert("applets", 5);
+	temp = dict.insert("banana", 4);
+	vector<string> test = {"apples", "apple", "applets"};
+	ASSERT_EQ(dict.predictCompletions("apple", 3), test);
+}
+TEST(DictTrieTests, PREDICTLEFTMIDDLE_TEST){
+	DictionaryTrie dict;
+	bool temp;
+	temp = dict.insert("banana", 4);
+	temp = dict.insert("apple", 4);
+	vector<string> test = {"apple"};
+	ASSERT_EQ(dict.predictCompletions("apple", 3), test);
+}
+TEST(DictTrieTests, PREDICTSAMEFREQ_TEST){
+	DictionaryTrie dict;
+	bool temp;
+	temp = dict.insert("applet", 3);
+	temp = dict.insert("apb", 3);
+	temp = dict.insert("apa", 3);
+	vector<string> test = {"apa", "apb", "applet"};
 	ASSERT_EQ(dict.predictCompletions("ap", 3), test);
 }

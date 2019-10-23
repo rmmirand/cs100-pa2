@@ -66,6 +66,9 @@ class DictionaryTrie {
 };
 struct CompareFrequency{
 	bool operator()(pair<string, unsigned int> p1, pair<string, unsigned int> p2){
+		if(p1.second == p2.second){
+			return p1.first < p2.first;
+		}
 		return p1.second > p2.second;
 	}
 };

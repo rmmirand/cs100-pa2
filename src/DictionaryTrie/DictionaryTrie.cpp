@@ -153,17 +153,19 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
 				return {};
 			}
 		}else{
-			if((i == (prefix.size()-1)) && curr->wordNode){
+			if((i == (prefix.size()-1) && curr->wordNode)){
 				pair<string,unsigned int> predict = make_pair(prefix, curr->frequency);
 				allPredicts.push_back(predict);
 				i++;
-				if(curr->middle){
-					curr = curr->middle;
-					i++;
-				}else{
+				if(!curr->middle){
 					predictions.push_back(prefix);
-					return predictions; //change
+					return predictions;
+				}else{
+					curr = curr->middle;
 				}
+			}else if((i == (prefix.size()-1))){
+				i++;
+				curr = curr->middle;
 			}else{
 				if(curr->middle){
 					curr = curr->middle;
@@ -175,7 +177,7 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
 			}
 		}
 	}
-	allPredicts = predictHelper(allPredicts, curr, prefix+curr->letter);
+	allPredicts = predictHelper(allPredicts, curr, prefix);
 	CompareFrequency compareFreq;
 	sort(allPredicts.begin(), allPredicts.end(), compareFreq);
 	if(allPredicts.size() < numCompletions){
@@ -188,16 +190,16 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
 }
 vector<pair<string,unsigned int>> DictionaryTrie::predictHelper(vector<pair<string, unsigned int>> wordsSoFar, TSTNode* curr, string prefix){
 	if(curr->wordNode){
-		wordsSoFar.push_back(make_pair(prefix, curr->frequency));
+		wordsSoFar.push_back(make_pair(prefix+curr->letter, curr->frequency));
 	}
 	if(curr->left){
-		wordsSoFar = predictHelper(wordsSoFar, curr->left, prefix+(curr->left->letter));
+		wordsSoFar = predictHelper(wordsSoFar, curr->left, prefix);
 	}
 	if(curr->middle){
-		wordsSoFar = predictHelper(wordsSoFar, curr->middle, prefix+(curr->middle->letter));
+		wordsSoFar = predictHelper(wordsSoFar, curr->middle, prefix+curr->letter);
 	}
 	if(curr->right){
-		wordsSoFar = predictHelper(wordsSoFar, curr->right, prefix+(curr->right->letter));
+		wordsSoFar = predictHelper(wordsSoFar, curr->right, prefix);
 	}
 	return wordsSoFar;
 }
