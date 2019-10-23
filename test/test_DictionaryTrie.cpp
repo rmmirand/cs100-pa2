@@ -36,8 +36,8 @@ TEST(DictTrieTests, EMPTYSTRING_TEST) {
     ASSERT_EQ(dict.insert(empty, 1), false);
 }
 TEST(DictTrieTests, INSERTROOT_TEST) {
-    DictionaryTrie dict;
+    DictionaryTrie dicti;
     bool temp;
-    temp = dict.insert("banana", 5);
-    ASSERT_EQ(dict.find("banana"), true);
+    temp = dicti.insert("banana", 5);
+    ASSERT_EQ(dicti.find("banana"), false);
 }

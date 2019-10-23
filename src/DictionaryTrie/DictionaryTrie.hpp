@@ -29,8 +29,10 @@ class DictionaryTrie {
 	bool wordNode;
 
         TSTNode(const char &letter) : letter(letter){
+		left = right = middle = 0;
 		frequency = 0;
 		wordNode = false;
+
 	}
     };  
     TSTNode* root;

@@ -16,6 +16,7 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 	if(word.empty()){
 			return false;
 	}
+	/*
 	if(!root){
 		root = new TSTNode(word[0]);
 		return(insertHelper(root, word, freq, 1));
@@ -43,7 +44,80 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 			}
 		}
 	}
-	return false; 
+	return false; */
+	unsigned int i =0;
+	char letter = word[i];
+	if(!root){
+		root = new TSTNode(word[i]);
+		i++;
+		TSTNode* curr = root;
+		while(i < word.size()){
+			curr->middle = new TSTNode(word[i]);
+			curr = curr->middle;
+			i++;
+		}
+	}
+	TSTNode* curr = root;
+	while(i < word.size()){
+		if(letter < curr->letter){
+			if(curr->left){
+				curr = curr->left;
+			}
+		        else{
+			curr->left = new TSTNode(word[i]);
+			curr = curr->left;
+			i++;
+			while(i < word.size()){
+				curr->middle = new TSTNode(word[i]);
+				curr = curr->middle;
+				i++;
+			}
+			curr->wordNode = true;
+			curr->frequency = freq;
+			return true;
+		        }
+		}else if(curr->letter < letter){
+			if(curr->right){
+				curr = curr->right;
+			}else{
+				curr->right = new TSTNode(word[i]);
+				curr = curr->right;
+				i++;
+				while(i < word.size()){
+					curr->middle = new TSTNode(word[i]);
+					curr = curr->middle;
+					i++;
+				}
+				curr->wordNode = true;
+				curr->frequency = freq;
+				return true;
+			}
+		}else{
+			if(i == (word.size()-1)){
+				curr->wordNode = true;
+				return true;
+			}else{
+				if(curr->middle){
+					curr = curr->middle;
+					i++;
+				}else{
+					while(i < word.size()){
+						curr->middle = new TSTNode(word[i]);
+						curr = curr->middle;
+						i++;
+						letter = word[i];
+					}
+					curr->wordNode = true;
+					curr->frequency = freq;
+				}
+			}
+		}
+		
+
+
+
+	}
+
 }
 DictionaryTrie::TSTNode* DictionaryTrie::insertRecurser(TSTNode* node, char letter)const{
 	TSTNode* currNode = node;
@@ -84,7 +158,7 @@ bool DictionaryTrie::find(string word) const {
 	}
 	return false; 
 */	
-	TSTNode* place = root;
+/*	TSTNode* place = root;
 	unsigned int wordBit = 0;
 	while(wordBit < word.size()){
 		if(word[wordBit] < place->letter){
@@ -108,7 +182,41 @@ bool DictionaryTrie::find(string word) const {
 				return false;
 			}
 		}
+	}*/
+	if(!root){
+		return false;
 	}
+	TSTNode* curr = root;
+	unsigned int i = 0;
+	char letter = word[i];
+	while(i < word.size()){
+		if(letter < curr->letter){
+			if(curr->left){
+				curr = curr->left;
+			}else{
+				return false;
+			}
+		}else if(curr->letter < letter){
+			if(curr->right){
+				curr = curr->right;
+			}else{
+				return false;
+			}
+		}else{
+			if((word[i] == word[word.size()-1]) && curr->wordNode){
+				return true;
+			}else{
+				if(curr->middle){
+					curr = curr->middle;
+					i++;
+					letter = word[i];
+				}else{
+					return false;
+				}
+			}
+		}
+	}
+	return false;
 }
 bool DictionaryTrie::findHelper(TSTNode* node, char lettre) const {
 /*	if(!node){
@@ -145,4 +253,4 @@ std::vector<string> DictionaryTrie::predictUnderscores(
 }
 
 /* TODO */
-DictionaryTrie::~DictionaryTrie() {/**deleteAll(root)**/}
+DictionaryTrie::~DictionaryTrie() {/**deleteAll(root)*/}
