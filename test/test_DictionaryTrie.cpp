@@ -114,3 +114,40 @@ TEST(DictTrieTests, PREDICTSAMEFREQ_TEST){
 	vector<string> test = {"apa", "apb", "applet"};
 	ASSERT_EQ(dict.predictCompletions("ap", 3), test);
 }
+TEST(DictTrieTests, BIGDATA_TEST){
+	DictionaryTrie dict;
+	bool temp;
+	temp = dict.insert("arm",5);
+	temp = dict.insert("yakuza",654);
+	temp = dict.insert("yak",3);
+	temp = dict.insert("burger",213);
+	temp = dict.insert("xyler",8);
+	temp = dict.insert("crap",12);
+	temp = dict.insert("cramp",357);
+	temp = dict.insert("zebra",23);
+	temp = dict.insert("ya",1);
+	temp = dict.insert("scatter",57);
+	temp = dict.insert("bird",3);
+	temp = dict.insert("birds",68);
+	temp = dict.insert("sword",12);
+	temp = dict.insert("shoot",76);
+	temp = dict.insert("tepid",85);
+	temp = dict.insert("red",21);
+	temp = dict.insert("potion",456);
+	temp = dict.insert("dracula",32);
+	temp = dict.insert("plant",123);
+	temp = dict.insert("tree",8);
+	temp = dict.insert("sharpen",3);
+	temp = dict.insert("fangs",43);
+	temp = dict.insert("pit",57);
+	temp = dict.insert("regulate",12);
+	temp = dict.insert("refrain",57);
+	temp = dict.insert("blue",23);
+	temp = dict.insert("cherry",4675);
+	temp = dict.insert("latch",231);
+	temp = dict.insert("honey",23);
+	temp = dict.insert("berry",21);
+	temp = dict.insert("vine",6);
+	vector<string> test = {"yakuza", "yak", "ya"};
+	ASSERT_EQ(dict.predictCompletions("ya", 5), test);
+}

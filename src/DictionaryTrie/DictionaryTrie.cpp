@@ -68,6 +68,7 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 		}else{
 			if(i == (word.size()-1)){
 				curr->wordNode = true;
+				curr->frequency = freq;
 				return true;
 			}else{
 				if(curr->middle){
@@ -156,12 +157,12 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
 			if((i == (prefix.size()-1) && curr->wordNode)){
 				pair<string,unsigned int> predict = make_pair(prefix, curr->frequency);
 				allPredicts.push_back(predict);
-				i++;
 				if(!curr->middle){
 					predictions.push_back(prefix);
 					return predictions;
 				}else{
 					curr = curr->middle;
+					break;
 				}
 			}else if((i == (prefix.size()-1))){
 				i++;
