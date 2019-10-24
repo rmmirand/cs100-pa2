@@ -1,18 +1,5 @@
-apple
-12
-y
-banana
-10
-3
-thirty
-20
-n
-five
-10
-y
-seven
-7
-y
-bye
-12
-n
+5 apple
+3 nut
+3 scrap
+10 home
+23 scall
