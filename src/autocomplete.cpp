@@ -83,6 +83,7 @@ int main(int argc, char** argv) {
         cin >> cont;
         cin.ignore();
     }
+
     delete dt;
     return 0;
 }
