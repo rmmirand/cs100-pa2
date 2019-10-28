@@ -32,6 +32,9 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 		return true;
 	}
 	TSTNode* curr = root;
+	if(find(word)){
+		return false;
+	}
 	while(i < word.size()){
 		if(word[i] < curr->letter){
 			if(curr->left){
@@ -126,7 +129,7 @@ bool DictionaryTrie::find(string word) const {
 			}
 		}
 	}
-	return true;
+	return false;
 }
 /* TODO */
 vector<string> DictionaryTrie::predictCompletions(string prefix,
