@@ -74,8 +74,18 @@ int main(int argc, char** argv) {
         cin >> numberOfCompletions;
 
         // TODO //
-	
-	vector<string> completed = dt->predictUnderscores(word, numberOfCompletions);
+	bool under = false;
+	for(unsigned int i =0; i < word.size(); i++){
+		if(word[i] == '_'){
+			under = true;
+		}
+	}
+	vector<string> completed;
+	if(under){	
+		completed = dt->predictUnderscores(word, numberOfCompletions);
+	}else{
+		completed = dt->predictCompletions(word, numberOfCompletions);
+	}
 	for(unsigned int i = 0; i < completed.size(); i++){
 		cout << completed[i] << endl;		
 	}
