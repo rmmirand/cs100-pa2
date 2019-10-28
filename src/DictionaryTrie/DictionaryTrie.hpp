@@ -48,7 +48,7 @@ class DictionaryTrie {
     };  
     TSTNode* root;
  
-    priority_queue<pair<string, unsigned int>, vector<pair<string,unsigned int>>, CompareFrequency> predictHelper(priority_queue<pair<string, unsigned int>, vector<pair<string, unsigned int>>, CompareFrequency> wordsSoFar, TSTNode* curr, string prefix);   
+    priority_queue<pair<string, unsigned int>, vector<pair<string,unsigned int>>, CompareFrequency> predictHelper(priority_queue<pair<string, unsigned int>, vector<pair<string, unsigned int>>, CompareFrequency> wordsSoFar, TSTNode* curr, string prefix, unsigned int numCompletions);   
     priority_queue<pair<string,unsigned int>, vector<pair<string, unsigned int>>, CompareFrequency> scoreHelper(priority_queue<pair<string, unsigned int>, vector<pair<string, unsigned int>>, CompareFrequency> wordsPredict, TSTNode* curr, string patter, unsigned int loc, string wordBuilder, unsigned int numCompletions);
   public:
 

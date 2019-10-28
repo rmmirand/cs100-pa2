@@ -179,7 +179,7 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
 			}
 		}
 	}
-	allPredicts = predictHelper(allPredicts, curr, prefix);
+	allPredicts = predictHelper(allPredicts, curr, prefix, numCompletions);
 	if(allPredicts.size() < numCompletions){
 		numCompletions = allPredicts.size();
 	}	
@@ -190,18 +190,21 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
 	reverse(predictions.begin(), predictions.end());
 	return predictions;
 }
-priority_queue<pair<string, unsigned int>, vector<pair<string,unsigned int>>, CompareFrequency> DictionaryTrie::predictHelper(priority_queue<pair<string, unsigned int>, vector<pair<string, unsigned int>>, CompareFrequency> wordsSoFar, TSTNode* curr, string prefix){
+priority_queue<pair<string, unsigned int>, vector<pair<string,unsigned int>>, CompareFrequency> DictionaryTrie::predictHelper(priority_queue<pair<string, unsigned int>, vector<pair<string, unsigned int>>, CompareFrequency> wordsSoFar, TSTNode* curr, string prefix, unsigned int numCompletions){
 	if(curr->wordNode){
 		wordsSoFar.push(make_pair(prefix+curr->letter, curr->frequency));
+		if(wordsSoFar.size() > numCompletions){
+			wordsSoFar.pop();
+		}		
 	}
 	if(curr->left){
-		wordsSoFar = predictHelper(wordsSoFar, curr->left, prefix);
+		wordsSoFar = predictHelper(wordsSoFar, curr->left, prefix, numCompletions);
 	}
 	if(curr->middle){
-		wordsSoFar = predictHelper(wordsSoFar, curr->middle, prefix+curr->letter);
+		wordsSoFar = predictHelper(wordsSoFar, curr->middle, prefix+curr->letter, numCompletions);
 	}
 	if(curr->right){
-		wordsSoFar = predictHelper(wordsSoFar, curr->right, prefix);
+		wordsSoFar = predictHelper(wordsSoFar, curr->right, prefix, numCompletions);
 	}
 	return wordsSoFar;
 }
