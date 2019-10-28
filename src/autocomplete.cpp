@@ -73,8 +73,9 @@ int main(int argc, char** argv) {
         cout << "Enter a number of completions:" << endl;
         cin >> numberOfCompletions;
 
-        // TODO
-	vector<string> completed = dt->predictCompletions(word, numberOfCompletions);
+        // TODO //
+	
+	vector<string> completed = dt->predictUnderscores(word, numberOfCompletions);
 	for(unsigned int i = 0; i < completed.size(); i++){
 		cout << completed[i] << endl;		
 	}
@@ -83,6 +84,7 @@ int main(int argc, char** argv) {
         cin >> cont;
         cin.ignore();
     }
+
 
     delete dt;
     return 0;

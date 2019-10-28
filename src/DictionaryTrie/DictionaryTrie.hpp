@@ -38,7 +38,7 @@ class DictionaryTrie {
     TSTNode* root;
  
     vector<pair<string,unsigned int>> predictHelper(vector<pair<string, unsigned int>> wordsSoFar, TSTNode* curr, string prefix);   
-
+    vector<pair<string,unsigned int>> scoreHelper(vector<pair<string, unsigned int>> wordsPredict, TSTNode* curr, string patter, unsigned int loc, string wordBuilder);
   public:
 
     void deleteAll(TSTNode* node);

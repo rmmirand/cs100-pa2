@@ -88,8 +88,8 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 			}
 		}
 	}
+	return false;
 }
-
 /* TODO */
 bool DictionaryTrie::find(string word) const { 
 	if(!root){
@@ -207,10 +207,58 @@ vector<pair<string,unsigned int>> DictionaryTrie::predictHelper(vector<pair<stri
 /* TODO */
 std::vector<string> DictionaryTrie::predictUnderscores(
     string pattern, unsigned int numCompletions) {
-    return {};
-}
+	if(!root){
+		return {};
+	}
+	TSTNode* curr = root;
+	vector<string> topPredictions;
+	vector<pair<string, unsigned int>> allPredictions;
+	string empty;
+	allPredictions = scoreHelper(allPredictions, curr, pattern, 0, empty);
+	if(allPredictions.size() < numCompletions){
+		numCompletions = allPredictions.size();
+	}
 
-/* TODO */
+	CompareFrequency compareFreq;
+	sort(allPredictions.begin(), allPredictions.end(), compareFreq);
+
+	for(unsigned int i = 0; i < numCompletions; i++){
+		topPredictions.push_back(allPredictions[i].first);
+	}
+    	return topPredictions;
+}
+std::vector<pair<string, unsigned int>> DictionaryTrie::scoreHelper(vector<pair<string, unsigned int>> wordsPredict, TSTNode* curr, string pattern, unsigned int loc, string wordBuilder){
+	if(!curr){
+		return wordsPredict;
+	}
+	while(loc < pattern.size()){
+		if(pattern[loc] == '_'){
+			wordsPredict = scoreHelper(wordsPredict, curr->left, pattern, loc, wordBuilder);
+			wordsPredict = scoreHelper(wordsPredict, curr->right, pattern, loc, wordBuilder);
+			wordsPredict = scoreHelper(wordsPredict, curr->middle, pattern, loc+1, wordBuilder+(curr->letter));
+			if(loc == pattern.size() - 1 && curr->wordNode){ 
+				wordsPredict.push_back(make_pair(wordBuilder+(curr->letter), curr->frequency));
+				return wordsPredict;
+			}
+		}else{
+			if(pattern[loc] == curr->letter){
+				if(loc == pattern.size() - 1 && curr->wordNode){ 
+					wordsPredict.push_back(make_pair(wordBuilder+(curr->letter), curr->frequency));
+					return wordsPredict;
+				}else{
+					wordsPredict = scoreHelper(wordsPredict, curr->middle, pattern, loc+1, wordBuilder+curr->letter);
+				}
+			}else if(pattern[loc] < curr->letter){
+				wordsPredict = scoreHelper(wordsPredict, curr->left, pattern, loc, wordBuilder);
+			}else{
+				wordsPredict = scoreHelper(wordsPredict, curr->right, pattern, loc, wordBuilder);
+			}
+		}
+		return wordsPredict;
+	}
+	return wordsPredict;
+}
+/*TODO */
 DictionaryTrie::~DictionaryTrie() {
 	deleteAll(root);
 }

@@ -151,3 +151,33 @@ TEST(DictTrieTests, BIGDATA_TEST){
 	vector<string> test = {"yakuza", "yak", "ya"};
 	ASSERT_EQ(dict.predictCompletions("ya", 5), test);
 }
+TEST(DictTrieTests, UNDERMID_TEST){
+	DictionaryTrie dict;
+	bool temp;
+	temp = dict.insert("amo",1);
+	temp = dict.insert("amor",2);
+	temp = dict.insert("ame",3);
+	temp = dict.insert("ami",4);
+	temp = dict.insert("amie",5);
+	temp = dict.insert("ale",3);
+	temp = dict.insert("ape",4);
+	temp = dict.insert("are",5);
+	temp = dict.insert("amp",5);
+	vector<string> test = {"are", "ape", "ale"};
+	ASSERT_EQ(dict.predictUnderscores("a_e", 3), test);
+}
+TEST(DictTrieTests, UNDERALL_TEST){
+	DictionaryTrie dict;
+	bool temp;
+	temp = dict.insert("amo",1);
+	temp = dict.insert("amor",2);
+	temp = dict.insert("ame",3);
+	temp = dict.insert("ami",4);
+	temp = dict.insert("amie",5);
+	temp = dict.insert("ale",3);
+	temp = dict.insert("ape",4);
+	temp = dict.insert("are",5);
+	temp = dict.insert("amp",5);
+	vector<string> test = {"amp", "are", "ami", "ape"};
+	ASSERT_EQ(dict.predictUnderscores("___", 4), test);
+}
