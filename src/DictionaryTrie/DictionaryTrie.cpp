@@ -6,6 +6,7 @@
 #include "DictionaryTrie.hpp"
 #include <iostream>
 #include <algorithm>
+#include <queue>
 
 /* TODO */
 DictionaryTrie::DictionaryTrie() {
@@ -131,7 +132,7 @@ bool DictionaryTrie::find(string word) const {
 vector<string> DictionaryTrie::predictCompletions(string prefix,
     		unsigned int numCompletions) {
 	vector<string> predictions;
-	vector<pair<string,unsigned int>> allPredicts;
+	priority_queue<pair<string, unsigned int>, vector<pair<string, unsigned int>>, CompareFrequency> allPredicts;
 
 	if(!root){
 		return {};
@@ -156,7 +157,7 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
 		}else{
 			if((i == (prefix.size()-1) && curr->wordNode)){
 				pair<string,unsigned int> predict = make_pair(prefix, curr->frequency);
-				allPredicts.push_back(predict);
+				allPredicts.push(predict);
 				if(!curr->middle){
 					predictions.push_back(prefix);
 					return predictions;
@@ -179,19 +180,19 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
 		}
 	}
 	allPredicts = predictHelper(allPredicts, curr, prefix);
-	CompareFrequency compareFreq;
-	sort(allPredicts.begin(), allPredicts.end(), compareFreq);
 	if(allPredicts.size() < numCompletions){
 		numCompletions = allPredicts.size();
 	}	
 	for(unsigned int i = 0; i < numCompletions ; i++){
-		predictions.push_back(allPredicts[i].first);
+		predictions.push_back(allPredicts.top().first);
+		allPredicts.pop();
 	}
+	reverse(predictions.begin(), predictions.end());
 	return predictions;
 }
-vector<pair<string,unsigned int>> DictionaryTrie::predictHelper(vector<pair<string, unsigned int>> wordsSoFar, TSTNode* curr, string prefix){
+priority_queue<pair<string, unsigned int>, vector<pair<string,unsigned int>>, CompareFrequency> DictionaryTrie::predictHelper(priority_queue<pair<string, unsigned int>, vector<pair<string, unsigned int>>, CompareFrequency> wordsSoFar, TSTNode* curr, string prefix){
 	if(curr->wordNode){
-		wordsSoFar.push_back(make_pair(prefix+curr->letter, curr->frequency));
+		wordsSoFar.push(make_pair(prefix+curr->letter, curr->frequency));
 	}
 	if(curr->left){
 		wordsSoFar = predictHelper(wordsSoFar, curr->left, prefix);
@@ -212,46 +213,50 @@ std::vector<string> DictionaryTrie::predictUnderscores(
 	}
 	TSTNode* curr = root;
 	vector<string> topPredictions;
-	vector<pair<string, unsigned int>> allPredictions;
+	priority_queue<pair<string, unsigned int>, vector<pair<string, unsigned int>>, CompareFrequency> allPredictions;
 	string empty;
-	allPredictions = scoreHelper(allPredictions, curr, pattern, 0, empty);
+	allPredictions = scoreHelper(allPredictions, curr, pattern, 0, empty, numCompletions);
 	if(allPredictions.size() < numCompletions){
 		numCompletions = allPredictions.size();
 	}
-
-	CompareFrequency compareFreq;
-	sort(allPredictions.begin(), allPredictions.end(), compareFreq);
-
 	for(unsigned int i = 0; i < numCompletions; i++){
-		topPredictions.push_back(allPredictions[i].first);
+		topPredictions.push_back(allPredictions.top().first);
+		allPredictions.pop();
 	}
+	reverse(topPredictions.begin(), topPredictions.end());
     	return topPredictions;
 }
-std::vector<pair<string, unsigned int>> DictionaryTrie::scoreHelper(vector<pair<string, unsigned int>> wordsPredict, TSTNode* curr, string pattern, unsigned int loc, string wordBuilder){
+priority_queue<pair<string, unsigned int>, vector<pair<string, unsigned int>>, CompareFrequency> DictionaryTrie::scoreHelper(priority_queue<pair<string, unsigned int>, vector<pair<string, unsigned int>>,CompareFrequency> wordsPredict, TSTNode* curr, string pattern, unsigned int loc, string wordBuilder, unsigned int numCompletions){
 	if(!curr){
 		return wordsPredict;
 	}
 	while(loc < pattern.size()){
 		if(pattern[loc] == '_'){
-			wordsPredict = scoreHelper(wordsPredict, curr->left, pattern, loc, wordBuilder);
-			wordsPredict = scoreHelper(wordsPredict, curr->right, pattern, loc, wordBuilder);
-			wordsPredict = scoreHelper(wordsPredict, curr->middle, pattern, loc+1, wordBuilder+(curr->letter));
+			wordsPredict = scoreHelper(wordsPredict, curr->left, pattern, loc, wordBuilder, numCompletions);
+			wordsPredict = scoreHelper(wordsPredict, curr->right, pattern, loc, wordBuilder, numCompletions);
+			wordsPredict = scoreHelper(wordsPredict, curr->middle, pattern, loc+1, wordBuilder+(curr->letter), numCompletions);
 			if(loc == pattern.size() - 1 && curr->wordNode){ 
-				wordsPredict.push_back(make_pair(wordBuilder+(curr->letter), curr->frequency));
+				wordsPredict.push(make_pair(wordBuilder+(curr->letter), curr->frequency));
+				if(wordsPredict.size() > numCompletions){
+					wordsPredict.pop();
+				}	
 				return wordsPredict;
 			}
 		}else{
 			if(pattern[loc] == curr->letter){
 				if(loc == pattern.size() - 1 && curr->wordNode){ 
-					wordsPredict.push_back(make_pair(wordBuilder+(curr->letter), curr->frequency));
+					wordsPredict.push(make_pair(wordBuilder+(curr->letter), curr->frequency));
+					if(wordsPredict.size() > numCompletions){
+						wordsPredict.pop();
+					}	
 					return wordsPredict;
 				}else{
-					wordsPredict = scoreHelper(wordsPredict, curr->middle, pattern, loc+1, wordBuilder+curr->letter);
+					wordsPredict = scoreHelper(wordsPredict, curr->middle, pattern, loc+1, wordBuilder+curr->letter, numCompletions);
 				}
 			}else if(pattern[loc] < curr->letter){
-				wordsPredict = scoreHelper(wordsPredict, curr->left, pattern, loc, wordBuilder);
+				wordsPredict = scoreHelper(wordsPredict, curr->left, pattern, loc, wordBuilder, numCompletions);
 			}else{
-				wordsPredict = scoreHelper(wordsPredict, curr->right, pattern, loc, wordBuilder);
+				wordsPredict = scoreHelper(wordsPredict, curr->right, pattern, loc, wordBuilder, numCompletions);
 			}
 		}
 		return wordsPredict;

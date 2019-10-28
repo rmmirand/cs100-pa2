@@ -35,6 +35,12 @@ TEST(DictTrieTests, EMPTYSTRING_TEST) {
     string empty = "";
     ASSERT_EQ(dict.insert(empty, 1), false);
 }
+TEST(DictTrieTests, EMPTYFIND_TEST){
+	DictionaryTrie dict;
+	string empty = "";
+	bool temp = dict.insert(empty, 2);
+	ASSERT_EQ(dict.find(empty), false);
+}
 TEST(DictTrieTests, INSERTROOT_TEST) {
     DictionaryTrie dicti;
     bool temp;

@@ -9,6 +9,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <queue>
 
 using namespace std;
 
@@ -16,6 +17,16 @@ using namespace std;
  * The class for a dictionary ADT, implemented as either
  * a mulit-way trie or a ternary search tree.
  */
+class CompareFrequency{
+	public:
+		bool operator()(pair<string, unsigned int> p1, pair<string, unsigned int> p2){
+			if(p1.second == p2.second){
+				return p1.first < p2.first;
+			}
+			return p1.second > p2.second;
+		}
+};
+
 class DictionaryTrie {
   private:
     // TODO: add private members and helper methods here
@@ -37,8 +48,8 @@ class DictionaryTrie {
     };  
     TSTNode* root;
  
-    vector<pair<string,unsigned int>> predictHelper(vector<pair<string, unsigned int>> wordsSoFar, TSTNode* curr, string prefix);   
-    vector<pair<string,unsigned int>> scoreHelper(vector<pair<string, unsigned int>> wordsPredict, TSTNode* curr, string patter, unsigned int loc, string wordBuilder);
+    priority_queue<pair<string, unsigned int>, vector<pair<string,unsigned int>>, CompareFrequency> predictHelper(priority_queue<pair<string, unsigned int>, vector<pair<string, unsigned int>>, CompareFrequency> wordsSoFar, TSTNode* curr, string prefix);   
+    priority_queue<pair<string,unsigned int>, vector<pair<string, unsigned int>>, CompareFrequency> scoreHelper(priority_queue<pair<string, unsigned int>, vector<pair<string, unsigned int>>, CompareFrequency> wordsPredict, TSTNode* curr, string patter, unsigned int loc, string wordBuilder, unsigned int numCompletions);
   public:
 
     void deleteAll(TSTNode* node);
@@ -62,17 +73,6 @@ class DictionaryTrie {
 
     /* TODO: add function header */
     ~DictionaryTrie();
-
+ 
 };
-struct CompareFrequency{
-	bool operator()(pair<string, unsigned int> p1, pair<string, unsigned int> p2){
-		if(p1.second == p2.second){
-			return p1.first < p2.first;
-		}
-		return p1.second > p2.second;
-	}
-};
-
-
-
 #endif  // DICTIONARY_TRIE_HPP
