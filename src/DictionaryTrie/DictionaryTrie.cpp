@@ -40,6 +40,7 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 	while(i < word.size()){
 		if(word[i] < curr->letter){
 			if(curr->left){
+				setMax(curr, freq);
 				curr = curr->left;
 			}
 		        else{
@@ -59,6 +60,7 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 		        }
 		}else if(curr->letter < word[i]){
 			if(curr->right){
+				setMax(curr, freq);
 				curr = curr->right;
 			}else{
 				curr->right = new TSTNode(word[i]);
