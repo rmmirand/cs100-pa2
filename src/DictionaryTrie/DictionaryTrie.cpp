@@ -26,7 +26,6 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 		while(i < word.size()){
 			curr->middle = new TSTNode(word[i]);
 			curr = curr->middle;
-			curr->maxBelow = freq;
 			setMax(curr, freq);
 			i++;
 		}
