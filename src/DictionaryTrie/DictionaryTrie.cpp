@@ -212,12 +212,12 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
 	return predictions;
 }
 priority_queue<pair<string, unsigned int>, vector<pair<string,unsigned int>>, CompareFrequency> DictionaryTrie::predictHelper(priority_queue<pair<string, unsigned int>, vector<pair<string, unsigned int>>, CompareFrequency> wordsSoFar, TSTNode* curr, string prefix, unsigned int numCompletions){
-	if(wordsSoFar.size() == numCompletions){
+/*	if(wordsSoFar.size() == numCompletions){
 		if(wordsSoFar.top().second > curr->maxBelow){
 			return wordsSoFar;
 		}
 	}
-	if(curr->wordNode){
+*/	if(curr->wordNode){
 		wordsSoFar.push(make_pair(prefix+curr->letter, curr->frequency));
 		if(wordsSoFar.size() > numCompletions){
 			wordsSoFar.pop();
