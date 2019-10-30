@@ -90,8 +90,8 @@ TEST(DictTrieTests, PREDICTSORT_TEST){
 	temp = dict.insert("az",2);
 	temp = dict.insert("ay",10);
 	temp = dict.insert("azi", 1);
-	vector<string> test = {"apa", "apb", "apc", "app", "apca"};
-	ASSERT_EQ(dict.predictCompletions("ap", 7), test);
+	vector<string> test = {"apa", "apb", "apc"};
+	ASSERT_EQ(dict.predictCompletions("ap", 3), test);
 }
 TEST(DictTrieTests, PREDICSAME_TEST){
 	DictionaryTrie dict;
@@ -100,8 +100,8 @@ TEST(DictTrieTests, PREDICSAME_TEST){
 	temp = dict.insert("apples", 7);
 	temp = dict.insert("applets", 5);
 	temp = dict.insert("banana", 4);
-	vector<string> test = {"apples", "apple", "applets"};
-	ASSERT_EQ(dict.predictCompletions("apple", 3), test);
+	vector<string> test = {"apples"};
+	ASSERT_EQ(dict.predictCompletions("apple", 1), test);
 }
 TEST(DictTrieTests, PREDICTLEFTMIDDLE_TEST){
 	DictionaryTrie dict;
