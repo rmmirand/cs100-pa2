@@ -22,9 +22,12 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 		root = new TSTNode(word[i]);
 		i++;
 		TSTNode* curr = root;
+		setMax(curr, freq);
 		while(i < word.size()){
 			curr->middle = new TSTNode(word[i]);
 			curr = curr->middle;
+			curr->maxBelow = freq;
+			setMax(curr, freq);
 			i++;
 		}
 		curr->wordNode = true;
@@ -43,10 +46,12 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 		        else{
 				curr->left = new TSTNode(word[i]);
 				curr = curr->left;
+				setMax(curr, freq);
 				i++;
 				while(i < word.size()){
 					curr->middle = new TSTNode(word[i]);
 					curr = curr->middle;
+					setMax(curr, freq);
 					i++;
 				}
 				curr->wordNode = true;
@@ -59,10 +64,12 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 			}else{
 				curr->right = new TSTNode(word[i]);
 				curr = curr->right;
+				setMax(curr, freq);
 				i++;
 				while(i < word.size()){
 					curr->middle = new TSTNode(word[i]);
 					curr = curr->middle;
+					setMax(curr, freq);
 					i++;
 				}
 				curr->wordNode = true;
@@ -71,11 +78,15 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 			}
 		}else{
 			if(i == (word.size()-1)){
-				curr->wordNode = true;
-				curr->frequency = freq;
+				if(!curr->wordNode){
+					curr->wordNode = true;
+					curr->frequency = freq;
+					setMax(curr, freq);
+				}
 				return true;
 			}else{
 				if(curr->middle){
+					setMax(curr, freq);
 					curr = curr->middle;
 					i++;
 				}else{
@@ -83,6 +94,7 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 					while(i < word.size()){
 						curr->middle = new TSTNode(word[i]);
 						curr = curr->middle;
+						setMax(curr, freq);
 						i++;
 					}
 					curr->wordNode = true;
@@ -93,6 +105,11 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 		}
 	}
 	return false;
+}
+void DictionaryTrie::setMax(TSTNode* node, unsigned int newFreq){
+	if(node->maxBelow < newFreq){
+		node->maxBelow = newFreq;
+	}
 }
 /* TODO */
 bool DictionaryTrie::find(string word) const { 
@@ -196,6 +213,11 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
 	return predictions;
 }
 priority_queue<pair<string, unsigned int>, vector<pair<string,unsigned int>>, CompareFrequency> DictionaryTrie::predictHelper(priority_queue<pair<string, unsigned int>, vector<pair<string, unsigned int>>, CompareFrequency> wordsSoFar, TSTNode* curr, string prefix, unsigned int numCompletions){
+	if(wordsSoFar.size() == numCompletions){
+		if(wordsSoFar.top().second > curr->maxBelow){
+			return wordsSoFar;
+		}
+	}
 	if(curr->wordNode){
 		wordsSoFar.push(make_pair(prefix+curr->letter, curr->frequency));
 		if(wordsSoFar.size() > numCompletions){

@@ -37,11 +37,12 @@ class DictionaryTrie {
         TSTNode* middle;
 	char const letter;
 	unsigned int frequency;
+	unsigned int maxBelow;
 	bool wordNode;
 
         TSTNode(const char &letter) : letter(letter){
 		left = right = middle = 0;
-		frequency = 0;
+		frequency = maxBelow =  0;
 		wordNode = false;
 
 	}
@@ -53,6 +54,7 @@ class DictionaryTrie {
   public:
 
     void deleteAll(TSTNode* node);
+    void setMax(TSTNode* node, unsigned int newFreq);
 
     /* TODO: add function header */
     DictionaryTrie();
