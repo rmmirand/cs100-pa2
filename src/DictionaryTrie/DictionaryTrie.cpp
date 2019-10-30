@@ -140,7 +140,9 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
 	if(!root){
 		return {};
 	}
-	
+	if(numCompletions < 1){
+		return {};
+	}
 	TSTNode* curr = root;
 	unsigned int i = 0;
 	char letter = prefix[i];
@@ -183,7 +185,7 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
 		}
 	}
 	allPredicts = predictHelper(allPredicts, curr, prefix, numCompletions);
-	if(allPredicts.size() < numCompletions && numCompletions >= 0){
+	if(allPredicts.size() < numCompletions){
 		numCompletions = allPredicts.size();
 	}	
 	for(unsigned int i = 0; i < numCompletions ; i++){
