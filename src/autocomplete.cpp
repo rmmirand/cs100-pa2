@@ -1,5 +1,11 @@
 /*
  * TODO: File Header
+ * Reads input file, populates DictionaryTrie with input file
+ * predicts completions or wildcard letters based on user words
+ * or patterns and outputs desired amount from highest to lowest
+ * frequency
+ *
+ * Rosa Miranda rmmirand@ucsd.edu
  */
 #include <fstream>
 #include <iostream>
@@ -74,27 +80,28 @@ int main(int argc, char** argv) {
         cin >> numberOfCompletions;
 
         // TODO //
-	bool under = false;
-	for(unsigned int i =0; i < word.size(); i++){
-		if(word[i] == '_'){
-			under = true;
-		}
-	}
-	vector<string> completed;
-	if(under){	
-		completed = dt->predictUnderscores(word, numberOfCompletions);
-	}else{
-		completed = dt->predictCompletions(word, numberOfCompletions);
-	}
-	for(unsigned int i = 0; i < completed.size(); i++){
-		cout << completed[i] << endl;		
-	}
+        // identifies if use wants predictCompletions or predictUnderscores
+        bool under = false;
+        for (unsigned int i = 0; i < word.size(); i++) {
+            if (word[i] == '_') {
+                under = true;
+            }
+        }
+        vector<string> completed;
+        if (under) {
+            completed = dt->predictUnderscores(word, numberOfCompletions);
+        } else {
+            completed = dt->predictCompletions(word, numberOfCompletions);
+        }
+        // prints vector in from highest to lowest frequency
+        for (unsigned int i = 0; i < completed.size(); i++) {
+            cout << completed[i] << endl;
+        }
 
         cout << "Continue? (y/n)" << endl;
         cin >> cont;
         cin.ignore();
     }
-
 
     delete dt;
     return 0;

@@ -1,1 +1,2 @@
-class breakCCompiler;int main() { return 0; }
+class breakCCompiler;
+int main() { return 0; }
