@@ -183,7 +183,7 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
 		}
 	}
 	allPredicts = predictHelper(allPredicts, curr, prefix, numCompletions);
-	if(allPredicts.size() < numCompletions){
+	if(allPredicts.size() < numCompletions && numCompletions >= 0){
 		numCompletions = allPredicts.size();
 	}	
 	for(unsigned int i = 0; i < numCompletions ; i++){
